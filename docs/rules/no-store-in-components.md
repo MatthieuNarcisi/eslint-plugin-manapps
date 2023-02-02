@@ -1,35 +1,37 @@
 # Disallow the usage of the store object in components (`no-store-in-components`)
 
-Please describe the origin of the rule here.
-
 ## Rule Details
 
-This rule aims to...
+Enforce the Facade pattern and disallow the direct use of the store object in the components.
 
 Examples of **incorrect** code for this rule:
 
-```js
+```ts
+class TestComponent { constructor(store: Store) {} }
+```
 
-// fill me in
+```ts
+class TestComponent { constructor(private store: Store) {} }
+```
 
+```ts
+class TestComponent { constructor(container: Store) {} }
+```
+
+```ts
+class TestComponent { constructor(private container: Store) {} }
 ```
 
 Examples of **correct** code for this rule:
 
-```js
-
-// fill me in
-
+```ts
+class TestService { constructor(store: Store) {} }
 ```
 
-### Options
-
-If there are any options, describe them here. Otherwise, delete this section.
+```ts
+class TestComponent { constructor(anotherService: AnotherService) {} }
+```
 
 ## When Not To Use It
 
-Give a short description of when it would be appropriate to turn off this rule.
-
-## Further Reading
-
-If there are other links that describe the issue this rule addresses, please include them here in a bulleted list.
+If you do not yet have implemented the facade pattern in your application.
