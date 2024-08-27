@@ -4,8 +4,8 @@
  */
 'use strict';
 
+import { RuleTester, TestCaseError } from '@typescript-eslint/rule-tester';
 import { AST_NODE_TYPES } from '@typescript-eslint/utils';
-import { RuleTester, TestCaseError } from '@typescript-eslint/utils/dist/ts-eslint';
 import rule from '../../../lib/rules/no-store-in-components';
 
 //------------------------------------------------------------------------------
@@ -21,10 +21,7 @@ const error: TestCaseError<'noStore'> = {
   type: AST_NODE_TYPES.Identifier,
 };
 
-const ruleTester = new RuleTester({
-  // @ts-ignore
-  parser: require.resolve('@typescript-eslint/parser'),
-});
+const ruleTester = new RuleTester();
 ruleTester.run('no-store-in-components', rule, {
   valid: [
     'class Test { }',

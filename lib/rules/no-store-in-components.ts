@@ -26,7 +26,6 @@ export default createRule({
     type: 'problem',
     docs: {
       description: 'Disallow the usage of the store object in components',
-      recommended: false,
     },
     schema: [], // Add a schema if the rule has options
   },
@@ -43,7 +42,7 @@ export default createRule({
         }
 
         let className: string | undefined = undefined;
-        let parent = node.parent;
+        let parent: any = node.parent;
 
         while (!className && parent) {
           if (parent.type === AST_NODE_TYPES.ClassDeclaration) {
