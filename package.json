@@ -1,5 +1,5 @@
 {
-  "name": "eslint-plugin-manapps",
+  "name": "@manapps/eslint-plugin-manapps",
   "version": "0.0.2",
   "description": "Rules for custom angular projects",
   "keywords": [
