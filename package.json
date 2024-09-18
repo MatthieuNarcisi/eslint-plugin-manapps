@@ -1,6 +1,6 @@
 {
   "name": "@manapps/eslint-plugin-manapps",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Rules for custom angular projects",
   "keywords": [
     "eslint",
@@ -41,7 +41,7 @@
     "node": ">= 18.0.0"
   },
   "peerDependencies": {
-    "eslint": ">=7"
+    "eslint": ">=9"
   },
   "license": "ISC"
 }
