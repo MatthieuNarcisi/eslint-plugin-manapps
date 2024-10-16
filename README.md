@@ -22,20 +22,17 @@ Add `manapps` to the plugins section of your `.eslintrc` configuration file. You
 
 ```json
 {
-    "plugins": [
-        "manapps"
-    ]
+  "plugins": ["manapps"]
 }
 ```
-
 
 Then configure the rules you want to use under the rules section.
 
 ```json
 {
-    "rules": {
-        "manapps/rule-name": 2
-    }
+  "rules": {
+    "manapps/rule-name": 2
+  }
 }
 ```
 
@@ -47,5 +44,3 @@ Then configure the rules you want to use under the rules section.
 | :--- |
 
 <!-- end auto-generated rules list -->
-
-

@@ -12,7 +12,7 @@
   "exports": "./lib/index.js",
   "scripts": {
     "lint": "npm-run-all \"lint:*\"",
-    "lint:eslint-docs": "npm-run-all \"update:eslint-docs -- --check\"",
+    "lint:eslint-docs": "npm run update:eslint-docs -- --check",
     "lint:js": "eslint .",
     "test": "jest",
     "build": "tsc && cp lib/index.js dist/lib/ && cp package.json dist/ && cp README.md dist/",
