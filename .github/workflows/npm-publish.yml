@@ -30,16 +30,8 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: npm run build
-      - run: pwd
-      - run: ls -l
       - run: cp -r docs dist/
-      - run: pwd
-      - run: ls -l
-      - run: cd dist
       - working-directory: dist
-        run: pwd
-      - working-directory: dist
-        run: ls -l
-      #- run: npm publish
-      #  env:
-      #    NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
