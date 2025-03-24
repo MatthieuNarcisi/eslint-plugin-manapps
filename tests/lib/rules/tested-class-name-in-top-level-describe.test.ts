@@ -5,7 +5,7 @@
 'use strict';
 
 import { RuleTester, TestCaseError } from '@typescript-eslint/rule-tester';
-import rule from '../../../lib/rules/class-name-in-top-level-describe-in-test';
+import rule from '../../../lib/rules/tested-class-name-in-top-level-describe';
 
 //------------------------------------------------------------------------------
 // Requirements
