@@ -45,8 +45,6 @@ export default createRule({
         .join('')
       : undefined;
 
-    console.log('className', className);
-
     return {
       'ExpressionStatement > CallExpression[callee.name="describe"]': (node: TSESTree.CallExpression) => {
         if (!className) return;
