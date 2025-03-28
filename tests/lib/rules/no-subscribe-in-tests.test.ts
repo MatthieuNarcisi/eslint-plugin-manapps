@@ -3,20 +3,8 @@
  * @author Massil TAGUEMOUT
  */
 
-import { RuleTester, TestCaseError } from '@typescript-eslint/rule-tester';
+import { RuleTester } from '@typescript-eslint/rule-tester';
 import rule from '../../../lib/rules/no-subscribe-in-tests';
-
-//------------------------------------------------------------------------------
-// Requirements
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// Tests
-//------------------------------------------------------------------------------
-
-const error: TestCaseError<'noSubscribeInTests'> = {
-  messageId: 'noSubscribeInTests',
-};
 
 const ruleTester = new RuleTester();
 
@@ -24,81 +12,87 @@ ruleTester.run('no-subscribe-in-tests', rule, {
   valid: [
     {
       code: `
-        import { firstValueFrom } from 'rxjs';
-        it('resolves observable value', async () => {
+        import { of, firstValueFrom } from 'rxjs';
+        
+        const myObservable = of(1, 2, 3);
+        async function testFunction() {
           const result = await firstValueFrom(myObservable);
-          expect(result).toBe(expectedValue);
-        });
+          return expect(result).resolves.toBeDefined();
+        }
       `,
-      filename: 'my-component.spec.ts',
+      filename: 'example.spec.ts',
     },
     {
       code: `
-        import { firstValueFrom } from 'rxjs';
-        it('resolves observable value', () => {
-          return expect(firstValueFrom(myObservable)).resolves.toBe(expectedValue);
-        });
+        import { fromEvent } from 'rxjs';
+
+        const clicks = fromEvent(document, 'click');
+        async function testFunction() {
+          const result = await firstValueFrom(clicks);
+          return expect(result).resolves.toBeDefined();
+        }
       `,
-      filename: 'my-component.spec.ts',
+      filename: 'example.test.ts',
     },
     {
       code: `
-        import { of } from 'rxjs';
-        it('handles synchronous observables', async () => {
-          const result = await firstValueFrom(of(42));
-          expect(result).toBe(42);
-        });
+        import { of, firstValueFrom } from 'rxjs';
+      
+        function notAnObservable() {
+          return { subscribe: () => {} };
+        }
+
+        const obj = notAnObservable();
+        obj.subscribe(); // Will not trigger the rule
       `,
-      filename: 'my-component.spec.ts',
+      filename: 'example.spec.ts',
     },
   ],
 
   invalid: [
     {
       code: `
-        it('returns expected value', () => {
-          myObservable.subscribe(value => {
-            expect(value).toBe(expectedValue);
-          });
-        });
+        import { of } from 'rxjs';
+
+        const myObservable = of(1, 2, 3);
+        myObservable.subscribe((val) => console.log(val));
       `,
-      filename: 'my-component.spec.ts',
-      errors: [error],
+      filename: 'example.spec.ts',
+      errors: [{ messageId: 'noSubscribeInTests' }],
     },
     {
       code: `
-        it('returns expected value', () => {
-          const subscription = myObservable.subscribe(value => {
-            expect(value).toBe(expectedValue);
-          });
+        import { Observable } from 'rxjs';
+
+        const myObservable = new Observable(subscriber => {
+          subscriber.next(1);
+          subscriber.complete();
         });
+
+        myObservable.subscribe();
       `,
-      filename: 'my-component.spec.ts',
-      errors: [error],
+      filename: 'example.test.ts',
+      errors: [{ messageId: 'noSubscribeInTests' }],
     },
     {
       code: `
-        it('uses subscribe', async () => {
-          myObservable.subscribe(value => {
-            expect(value).toBe(expectedValue);
-          });
-        });
+        import { fromEvent } from 'rxjs';
+
+        const clicks = fromEvent(document, 'click');
+        clicks.subscribe();
       `,
-      filename: 'my-component.test.ts',
-      errors: [error],
+      filename: 'example.spec.ts',
+      errors: [{ messageId: 'noSubscribeInTests' }],
     },
     {
       code: `
-        describe('MyComponent', () => {
-          it('uses subscribe', () => {
-            service.getData().subscribe(data => {
-              expect(data).toEqual(mockData);
-            });
-          });
-        });
+        import { merge, of } from 'rxjs';
+
+        const merged = merge(of(1), of(2));
+        merged.subscribe(console.log);
       `,
-      filename: 'my-component.spec.ts',
-      errors: [error],
+      filename: 'example.test.ts',
+      errors: [{ messageId: 'noSubscribeInTests' }],
     },
   ],
 });
