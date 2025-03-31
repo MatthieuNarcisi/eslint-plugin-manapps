@@ -33,17 +33,16 @@ export default createRule({
       return {};
     }
 
-    // Stocke les variables de type Observable
+    // Store variables of type Observable
     const observableVariables = new Set<string>();
 
-    // Liste des fonctions RxJS qui retournent des Observables
-    const observableCreationMethods = new Set([
-      'Observable', 'of', 'from', 'fromEvent', 'interval', 'timer', 'range',
-      'throwError', 'defer', 'merge', 'concat', 'combineLatest', 'forkJoin', 'zip'
-    ]);
+    // List of RxJS functions that return Observables
+    const observableCreationMethods = new Set(["ajax", "bindCallback", "bindNodeCallback", "defer",
+      "empty", "from", "fromEvent", "fromEventPattern", "generate", "interval", "of", "range", "throwError", "timer",
+      "concat", "forkJoin", "merge", "race", "zip", "combineLatest", "partition"]);
 
     return {
-      // Détection des importations de la classe Observable et des créateurs RxJS depuis le module 'rxjs'
+      // Detect imports of Observable class and methods from package 'rxjs'
       ImportDeclaration(node: TSESTree.ImportDeclaration) {
         if (node.source.value === 'rxjs') {
           for (const specifier of node.specifiers) {
@@ -57,7 +56,7 @@ export default createRule({
         }
       },
 
-      // Capture les variables déclarées comme des Observables
+      // Catch variables declared as Observables
       VariableDeclarator(node: TSESTree.VariableDeclarator) {
         if (!node.id || node.id.type !== AST_NODE_TYPES.Identifier) {
           return;
@@ -65,7 +64,7 @@ export default createRule({
 
         const variableName = node.id.name;
 
-        // Vérifie si l'Observable est créé avec `new Observable()`
+        // Check if the Observable is created with `new Observable()`
         if (
           node.init &&
           node.init.type === AST_NODE_TYPES.NewExpression &&
@@ -76,7 +75,7 @@ export default createRule({
           return;
         }
 
-        // Vérifie si l'Observable est créé avec une méthode RxJS (`of()`, `from()`, etc.)
+        // Check if the Observable is created with an RxJS method (`of()`, `from()`, etc.)
         if (
           node.init &&
           node.init.type === AST_NODE_TYPES.CallExpression &&
@@ -88,7 +87,7 @@ export default createRule({
         }
       },
 
-      // Capture les appels `.subscribe()` sur des objets identifiés comme `Observable`
+      // Catch calls to `.subscribe()` on objects identified as Observables
       "CallExpression[callee.type='MemberExpression'][callee.property.name='subscribe']"(
         node: TSESTree.CallExpression
       ) {
@@ -97,7 +96,7 @@ export default createRule({
         if (object.object.type === AST_NODE_TYPES.Identifier) {
           const objectName = object.object.name;
 
-          // Vérifie si l'objet appelant `subscribe` est un Observable
+          // Check if caller object is an Observable
           if (observableVariables.has(objectName)) {
             context.report({
               node,
