@@ -49,13 +49,11 @@ export default createRule({
 
       // Detect dynamic imports
       ImportExpression(node: TSESTree.ImportExpression) {
-        console.log('📥 ImportExpression detected:', node);
         if (
           node.source.type === AST_NODE_TYPES.Literal &&
           typeof node.source.value === 'string' &&
           node.source.value.startsWith('date-fns')
         ) {
-          console.log('⚠️ Found invalid dynamic import of date-fns!');
           context.report({
             node,
             messageId: 'noDirectUseDateFns',
